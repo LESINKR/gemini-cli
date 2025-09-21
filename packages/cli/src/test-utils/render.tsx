@@ -22,12 +22,16 @@ const mockSettings = new LoadedSettings(
 
 export const renderWithProviders = (
   component: React.ReactElement,
-  { shellFocus = true, settings = mockSettings } = {},
+  {
+    shellFocus = true,
+    settings = mockSettings,
+    kittyProtocolEnabled = true,
+  } = {},
 ): ReturnType<typeof render> =>
   render(
     <SettingsContext.Provider value={settings}>
       <ShellFocusContext.Provider value={shellFocus}>
-        <KeypressProvider kittyProtocolEnabled={true}>
+        <KeypressProvider kittyProtocolEnabled={kittyProtocolEnabled}>
           {component}
         </KeypressProvider>
       </ShellFocusContext.Provider>
