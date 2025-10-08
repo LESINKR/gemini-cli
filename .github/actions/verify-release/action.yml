@@ -59,9 +59,8 @@ runs:
         max_attempts: 10
         command: |-
           cd ./verify
-          pkg="${{ inputs.npm-package }}"
           NODE_AUTH_TOKEN="${{ inputs.github-token }}"
-          npm install --registry="${{ inputs.npm-registry-url }}" --prefer-online --no-cache -g "$pkg"
+          npm install --registry="${{ inputs.npm-registry-url }}" --prefer-online --no-cache -g "${{ inputs.npm-package }}"
 
     - name: 'Smoke test - NPM Install'
       shell: 'bash'
