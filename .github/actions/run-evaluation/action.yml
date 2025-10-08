@@ -1,0 +1,90 @@
+name: 'Run Evaluation'
+description: 'Runs the SWE-bench evaluation in a container, parses the results, and checks them against a threshold.'
+
+inputs:
+  branch-name:
+    description: 'The branch to run the evaluation on.'
+    required: true
+  github-token:
+    description: 'The GitHub token for authentication.'
+    required: true
+  gcp-wif-provider:
+    description: 'The GCP Workload Identity Federation provider.'
+    required: true
+  gcp-project-id:
+    description: 'The GCP project ID.'
+    required: true
+  service-account-email:
+    description: 'The email of the GCP service account.'
+    required: true
+  eval-gemini-api-key:
+    description: 'The Gemini API key for running the evaluation.'
+    required: true
+  eval-gcs-bucket:
+    description: 'The GCS bucket for storing evaluation artifacts.'
+    required: true
+  resolution-rate-threshold:
+    description: 'The threshold for the resolution rate.'
+    required: false
+    default: '90'
+  tool-success-rate-threshold:
+    description: 'The threshold for the tool success rate.'
+    required: false
+    default: '80'
+  working-directory:
+    description: 'The working directory containing the checkout.'
+    required: false
+    default: '.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: '${{ inputs.gcp-project-id }}'
+        workload_identity_provider: '${{ inputs.gcp-wif-provider }}'
+        service_account: '${{ inputs.service-account-email }}'
+        token_format: 'access_token'
+        access_token_scopes: 'https://www.googleapis.com/auth/cloud-platform'
+
+    - name: 'Run evaluation container'
+      shell: 'bash'
+      run: |
+        docker run --rm \
+          --workdir /app \
+          -v "${{ inputs.working-directory }}:/app" \
+          -e GITHUB_TOKEN='${{ inputs.github-token }}' \
+          -e DEFAULT_VERTEXAI_PROJECT='${{ inputs.gcp-project-id }}' \
+          -e GOOGLE_CLOUD_PROJECT='${{ inputs.gcp-project-id }}' \
+          -e GEMINI_API_KEY='${{ inputs.eval-gemini-api-key }}' \
+          -e GCLI_LOCAL_FILE_TELEMETRY='True' \
+          -e EVAL_GCS_BUCKET='${{ inputs.eval-gcs-bucket }}' \
+          ghcr.io/google-gemini/gemini-cli-swe-agent-eval@sha256:cd5edc4afd2245c1f575e791c0859b3c084a86bb3bd9a6762296da5162b35a8f \
+          bash -c "poetry run exp_run --experiment-mode=on-demand --branch-or-commit=${{ inputs.branch-name }} --model-name=gemini-2.5-pro --dataset=swebench_verified --concurrency=15 && poetry run python agent_prototypes/scripts/parse_gcli_logs_experiment.py --experiment_dir=experiments/adhoc/gcli_temp_exp --gcs-bucket='${{ inputs.eval-gcs-bucket }}' --gcs-path=gh_action_artifacts"
+
+    - name: 'Get evaluation summary'
+      id: 'calculate-rates'
+      shell: 'bash'
+      run: |
+        # The eval container runs as root, so we need to change ownership back to the runner user
+        sudo chown -R "$(whoami)":"$(whoami)" "${{ inputs.working-directory }}/experiments"
+        bash ${{ inputs.working-directory }}/scripts/calculate_eval_success_rates.sh ${{ inputs.working-directory }}/experiments/adhoc/gcli_temp_exp/artifacts/summary_stats.md
+
+    - name: 'Check evaluation threshold'
+      shell: 'bash'
+      run: |
+        resolution_rate=${{ steps.calculate-rates.outputs.resolution-rate }}
+        tool_success_rate=${{ steps.calculate-rates.outputs.tool-success-rate }}
+        resolution_threshold=${{ inputs.resolution-rate-threshold }}
+        tool_threshold=${{ inputs.tool-success-rate-threshold }}
+
+        echo "Resolution Rate: ${resolution_rate}% (Threshold: ${resolution_threshold}%)"
+        echo "Tool Success Rate: ${tool_success_rate}% (Threshold: ${tool_threshold}%)"
+
+        if (( resolution_rate < resolution_threshold || tool_success_rate < tool_threshold )); then
+          echo "::error::Evaluation failed to meet the required thresholds."
+          exit 1
+        else
+          echo "Evaluation meets or exceeds threshold."
+        fi

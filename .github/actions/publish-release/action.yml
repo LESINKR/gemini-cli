@@ -50,16 +50,47 @@ inputs:
   gemini_api_key:
     description: 'The API key for running integration tests.'
     required: true
+  gcp-wif-provider:
+    description: 'The GCP Workload Identity Federation provider.'
+    required: true
+  gcp-project-id:
+    description: 'The GCP project ID.'
+    required: true
+  service-account-email:
+    description: 'The email of the GCP service account.'
+    required: true
+  eval-gemini-api-key:
+    description: 'The Gemini API key for running the evaluation.'
+    required: true
+  eval-gcs-bucket:
+    description: 'The GCS bucket for storing evaluation artifacts.'
+    required: true
+  resolution-rate-threshold:
+    description: 'The threshold for the resolution rate.'
+    required: false
+    default: '90'
+  tool-success-rate-threshold:
+    description: 'The threshold for the tool success rate.'
+    required: false
+    default: '80'
 
 runs:
   using: 'composite'
   steps:
-    - name: 'Trigger Evaluation'
-      uses: './.github/actions/trigger-evaluation'
+    - name: 'Run Pre-Release Evaluation'
+      if: "${{ inputs.dry-run == 'false' }}"
+      uses: './.github/actions/run-evaluation'
       with:
         branch-name: '${{ inputs.branch-name }}'
-        is-release-dry-run: '${{ inputs.dry-run }}'
         github-token: '${{ inputs.github-token }}'
+        gcp-wif-provider: '${{ inputs.gcp-wif-provider }}'
+        gcp-project-id: '${{ inputs.gcp-project-id }}'
+        service-account-email: '${{ inputs.service-account-email }}'
+        eval-gemini-api-key: '${{ inputs.eval-gemini-api-key }}'
+        eval-gcs-bucket: '${{ inputs.eval-gcs-bucket }}'
+        resolution-rate-threshold: '${{ inputs.resolution-rate-threshold }}'
+        tool-success-rate-threshold: '${{ inputs.tool-success-rate-threshold }}'
+        working-directory: '${{ inputs.working-directory }}'
 
     - name: 'Configure npm for publishing'
       uses: 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020'
