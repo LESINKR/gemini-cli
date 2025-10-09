@@ -78,7 +78,6 @@ runs:
   using: 'composite'
   steps:
     - name: 'Run Pre-Release Evaluation'
-      if: "${{ inputs.dry-run == 'false' }}"
       uses: './.github/actions/run-evaluation'
       with:
         branch-name: '${{ inputs.branch-name }}'
@@ -91,6 +90,7 @@ runs:
         resolution-rate-threshold: '${{ inputs.resolution-rate-threshold }}'
         tool-success-rate-threshold: '${{ inputs.tool-success-rate-threshold }}'
         working-directory: '${{ inputs.working-directory }}'
+        dry-run: '${{ inputs.dry-run }}'
 
     - name: 'Configure npm for publishing'
       uses: 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020'
