@@ -58,9 +58,10 @@ runs:
     - name: 'Run evaluation container'
       shell: 'bash'
       run: |
+        mkdir -p "${{ inputs.working-directory }}/experiments"
         docker run --rm \
           --workdir /app \
-          -v "${{ inputs.working-directory }}:/app" \
+          -v "${{ inputs.working-directory }}/experiments:/app/experiments" \
           -e GITHUB_TOKEN='${{ inputs.github-token }}' \
           -e DEFAULT_VERTEXAI_PROJECT='${{ inputs.gcp-project-id }}' \
           -e GOOGLE_CLOUD_PROJECT='${{ inputs.gcp-project-id }}' \
