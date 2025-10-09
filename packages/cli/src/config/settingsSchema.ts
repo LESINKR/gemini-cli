@@ -1068,7 +1068,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: true,
         default: {},
         description: 'Configuration for Codebase Investigator.',
-        showInDialog: true,
+        showInDialog: false,
         properties: {
           enabled: {
             type: 'boolean',
@@ -1081,7 +1081,7 @@ const SETTINGS_SCHEMA = {
           },
           maxNumTurns: {
             type: 'number',
-            label: 'Max Num Turns',
+            label: 'Codebase Investigator Max Num Turns',
             category: 'Experimental',
             requiresRestart: true,
             default: 15,
@@ -1097,7 +1097,7 @@ const SETTINGS_SCHEMA = {
             default: 15,
             description:
               'Maximum time for the Codebase Investigator agent (in minutes).',
-            showInDialog: true,
+            showInDialog: false,
           },
           thinkingBudget: {
             type: 'number',
@@ -1107,7 +1107,7 @@ const SETTINGS_SCHEMA = {
             default: -1,
             description:
               'The thinking budget for the Codebase Investigator agent.',
-            showInDialog: true,
+            showInDialog: false,
           },
           model: {
             type: 'string',
@@ -1117,7 +1117,7 @@ const SETTINGS_SCHEMA = {
             default: DEFAULT_GEMINI_MODEL,
             description:
               'The model to use for the Codebase Investigator agent.',
-            showInDialog: true,
+            showInDialog: false,
           },
         },
       },
