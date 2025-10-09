@@ -203,8 +203,6 @@ export enum AuthProviderType {
   SERVICE_ACCOUNT_IMPERSONATION = 'service_account_impersonation',
 }
 
-import type { RunConfig, ModelConfig } from '../agents/types.js';
-
 export interface SandboxConfig {
   command: 'docker' | 'podman' | 'sandbox-exec';
   image: string;
@@ -280,13 +278,6 @@ export interface ConfigParameters {
   enableMessageBusIntegration?: boolean;
   enableSubagents?: boolean;
   codebaseInvestigatorSettings?: CodebaseInvestigatorSettings;
-  subagentConfigurations?: Record<
-    string,
-    {
-      modelConfig?: Partial<ModelConfig>;
-      runConfig?: Partial<RunConfig>;
-    }
-  >;
 }
 
 export class Config {
@@ -381,13 +372,6 @@ export class Config {
   private readonly enableMessageBusIntegration: boolean;
   private readonly enableSubagents: boolean;
   private readonly codebaseInvestigatorSettings?: CodebaseInvestigatorSettings;
-  private readonly subagentConfigurations?: Record<
-    string,
-    {
-      modelConfig?: Partial<ModelConfig>;
-      runConfig?: Partial<RunConfig>;
-    }
-  >;
 
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
@@ -479,7 +463,6 @@ export class Config {
       params.enableMessageBusIntegration ?? false;
     this.enableSubagents = params.enableSubagents ?? false;
     this.codebaseInvestigatorSettings = params.codebaseInvestigatorSettings;
-    this.subagentConfigurations = params.subagentConfigurations;
     this.extensionManagement = params.extensionManagement ?? true;
     this.storage = new Storage(this.targetDir);
     this.enablePromptCompletion = params.enablePromptCompletion ?? false;
@@ -1065,10 +1048,6 @@ export class Config {
 
   getCodebaseInvestigatorSettings(): CodebaseInvestigatorSettings | undefined {
     return this.codebaseInvestigatorSettings;
-  }
-
-  getSubagentConfigurations() {
-    return this.subagentConfigurations;
   }
 
   async createToolRegistry(): Promise<ToolRegistry> {
