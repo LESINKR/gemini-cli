@@ -667,9 +667,9 @@ export function KeypressProvider({
       keypressStream.on('keypress', handleKeypress);
       stdin.on('data', handleRawKeypress);
     } else {
-      rl = readline.createInterface({ input: stdin, escapeCodeTimeout: 0 });
-      readline.emitKeypressEvents(stdin, rl);
-      stdin.on('keypress', handleKeypress);
+      // rl = readline.createInterface({ input: stdin, escapeCodeTimeout: 0 });
+      // readline.emitKeypressEvents(stdin, rl);
+      // stdin.on('keypress', handleKeypress);
     }
 
     return () => {

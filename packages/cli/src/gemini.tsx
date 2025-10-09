@@ -5,8 +5,8 @@
  */
 
 import React from 'react';
-import { render } from 'ink';
-import { AppContainer } from './ui/AppContainer.js';
+import { render, Text } from 'ink';
+// import { AppContainer } from './ui/AppContainer.js';
 import { loadCliConfig, parseArguments } from './config/config.js';
 import * as cliConfig from './config/config.js';
 import { readStdin } from './utils/readStdin.js';
@@ -142,9 +142,9 @@ export async function startInteractiveUI(
   settings: LoadedSettings,
   startupWarnings: string[],
   workspaceRoot: string = process.cwd(),
-  initializationResult: InitializationResult,
+  _: InitializationResult,
 ) {
-  const version = await getCliVersion();
+  await getCliVersion();
   setWindowTitle(basename(workspaceRoot), settings);
 
   // Create wrapper component to use hooks inside render
@@ -159,13 +159,7 @@ export async function startInteractiveUI(
         >
           <SessionStatsProvider>
             <VimModeProvider settings={settings}>
-              <AppContainer
-                config={config}
-                settings={settings}
-                startupWarnings={startupWarnings}
-                version={version}
-                initializationResult={initializationResult}
-              />
+              <Text>Love of my life</Text>
             </VimModeProvider>
           </SessionStatsProvider>
         </KeypressProvider>

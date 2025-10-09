@@ -87,7 +87,7 @@ export async function detectAndEnableKittyProtocol(): Promise<boolean> {
       }
     };
 
-    process.stdin.on('data', handleData);
+    // process.stdin.on('data', handleData);
 
     // Send queries
     process.stdout.write('\x1b[?u'); // Query progressive enhancement
