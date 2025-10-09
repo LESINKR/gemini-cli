@@ -17,11 +17,10 @@
     "node_modules",
     "dist",
     // TODO(5691): Fix type errors and remove excludes.
-    "src/commands/mcp.test.ts",
-    "src/commands/mcp/add.test.ts",
-    "src/commands/mcp/list.test.ts",
-    "src/commands/mcp/remove.test.ts",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
     "src/config/config.integration.test.ts",
+<<<<<<< Updated upstream
     "src/config/config.test.ts",
     "src/config/extension.test.ts",
     "src/config/settings.test.ts",
@@ -81,6 +80,9 @@
     "src/ui/themes/theme.test.ts",
     "src/validateNonInterActiveAuth.test.ts",
     "src/services/prompt-processors/shellProcessor.test.ts"
+=======
+    "src/commands/extensions/examples/**"
+>>>>>>> Stashed changes
   ],
   "references": [{ "path": "../core" }]
 }
