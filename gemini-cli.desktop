@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Gemini CLI
+GenericName=AI Terminal Assistant
+Comment=Terminal-first AI agent powered by Google Gemini
+Exec=sh -c 'if command -v gemini >/dev/null 2>&1; then x-terminal-emulator -e gemini; else x-terminal-emulator -e "node %INSTALL_DIR%/scripts/start.js"; fi'
+Icon=%INSTALL_DIR%/packages/vscode-ide-companion/assets/icon.png
+Terminal=true
+Categories=Development;Utility;ConsoleOnly;
+Keywords=ai;gemini;cli;terminal;assistant;
+StartupNotify=true
