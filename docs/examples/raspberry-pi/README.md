@@ -1,12 +1,14 @@
 # Raspberry Pi Examples for Gemini CLI
 
-This directory contains helper scripts and configuration files for running Gemini CLI on Raspberry Pi and other ARM-based devices.
+This directory contains helper scripts and configuration files for running
+Gemini CLI on Raspberry Pi and other ARM-based devices.
 
 ## Scripts
 
 ### 1. System Monitoring (`monitor-system.sh`)
 
 Real-time system resource monitoring script that tracks:
+
 - CPU and GPU temperature
 - CPU usage and frequency
 - Memory and disk usage
@@ -14,6 +16,7 @@ Real-time system resource monitoring script that tracks:
 - Gemini CLI process status
 
 **Usage:**
+
 ```bash
 # Basic usage with default settings
 ./monitor-system.sh
@@ -32,6 +35,7 @@ Real-time system resource monitoring script that tracks:
 ```
 
 **Features:**
+
 - Color-coded temperature warnings
 - Real-time throttling detection
 - Process-specific monitoring for Gemini CLI
@@ -40,9 +44,11 @@ Real-time system resource monitoring script that tracks:
 
 ### 2. Temperature Guard (`temp-guard.sh`)
 
-Automated temperature management that protects your Raspberry Pi from overheating by managing process priority and execution.
+Automated temperature management that protects your Raspberry Pi from
+overheating by managing process priority and execution.
 
 **Usage:**
+
 ```bash
 # Warn only mode (default)
 ./temp-guard.sh
@@ -64,11 +70,13 @@ sudo ./temp-guard.sh --action pause
 ```
 
 **Actions:**
+
 - `warn` - Log warnings only (no process intervention)
 - `nice` - Reduce process priority when temperature exceeds threshold
 - `pause` - Pause process when critical temperature reached (requires sudo)
 
 **Features:**
+
 - Configurable temperature thresholds
 - Multiple protection strategies
 - Automatic recovery when temperature normalizes
@@ -77,9 +85,11 @@ sudo ./temp-guard.sh --action pause
 
 ### 3. Backup Script (`backup-gemini.sh`)
 
-Creates timestamped backups of your Gemini CLI configuration, settings, and related data.
+Creates timestamped backups of your Gemini CLI configuration, settings, and
+related data.
 
 **Usage:**
+
 ```bash
 # Basic backup with default settings
 ./backup-gemini.sh
@@ -101,12 +111,14 @@ Creates timestamped backups of your Gemini CLI configuration, settings, and rela
 ```
 
 **What gets backed up:**
+
 - `~/.gemini/` - Gemini CLI configuration and settings
 - `~/.gitconfig` - Git configuration
 - `~/.ssh/config` - SSH configuration (excluding private keys)
 - Global npm packages list
 
 **Features:**
+
 - Automatic rotation (keeps 5 most recent by default)
 - Optional compression
 - Restore instructions in output
@@ -114,9 +126,11 @@ Creates timestamped backups of your Gemini CLI configuration, settings, and rela
 
 ### 4. Systemd Service (`gemini-cli.service`)
 
-Example systemd service configuration for running Gemini CLI as a system service.
+Example systemd service configuration for running Gemini CLI as a system
+service.
 
 **Installation:**
+
 ```bash
 # 1. Edit the service file
 nano gemini-cli.service
@@ -142,6 +156,7 @@ sudo journalctl -u gemini-cli -f
 ```
 
 **Features:**
+
 - Automatic restart on failure
 - Resource limits (CPU, memory)
 - Security hardening
@@ -191,29 +206,32 @@ kill $TEMP_GUARD_PID 2>/dev/null
 ## Quick Start Guide
 
 1. **Download scripts:**
+
    ```bash
    mkdir -p ~/gemini-scripts
    cd ~/gemini-scripts
-   
+
    # Download all scripts from repository
    wget https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/examples/raspberry-pi/monitor-system.sh
    wget https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/examples/raspberry-pi/temp-guard.sh
    wget https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/examples/raspberry-pi/backup-gemini.sh
-   
+
    # Make executable
    chmod +x *.sh
    ```
 
 2. **Test monitoring:**
+
    ```bash
    ./monitor-system.sh
    ```
 
 3. **Set up temperature protection:**
+
    ```bash
    # Test in one terminal
    ./temp-guard.sh --action nice
-   
+
    # Then add to startup via crontab or systemd
    ```
 
@@ -233,6 +251,7 @@ chmod +x script-name.sh
 ### Temperature Monitoring Not Working
 
 Ensure `vcgencmd` is available:
+
 ```bash
 # Test
 vcgencmd measure_temp
@@ -244,6 +263,7 @@ sudo apt-get install libraspberrypi-bin
 ### Logs Not Writing
 
 Check file permissions:
+
 ```bash
 # For user logs
 mkdir -p ~/logs
@@ -256,6 +276,7 @@ sudo ./temp-guard.sh --log /var/log/temp-guard.log
 ### Process Not Found
 
 Verify Gemini CLI is running:
+
 ```bash
 ps aux | grep gemini
 ```
@@ -270,15 +291,18 @@ All scripts are designed to have minimal impact on system resources.
 
 ## Contributing
 
-Improvements and additional scripts are welcome! Please submit pull requests to the main Gemini CLI repository.
+Improvements and additional scripts are welcome! Please submit pull requests to
+the main Gemini CLI repository.
 
 ## License
 
-All scripts are licensed under Apache License 2.0. See individual file headers for details.
+All scripts are licensed under Apache License 2.0. See individual file headers
+for details.
 
 ## Support
 
 For issues or questions:
+
 - [Gemini CLI Documentation](../../README.md)
 - [Raspberry Pi Deployment Guide](../get-started/raspberry-pi.md)
 - [GitHub Issues](https://github.com/google-gemini/gemini-cli/issues)

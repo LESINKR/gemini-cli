@@ -1,6 +1,8 @@
 # Gemini CLI on Raspberry Pi
 
-This guide provides comprehensive instructions for running Gemini CLI on Raspberry Pi and other ARM-based devices, including resource monitoring, SSH configuration, and best practices for optimal performance.
+This guide provides comprehensive instructions for running Gemini CLI on
+Raspberry Pi and other ARM-based devices, including resource monitoring, SSH
+configuration, and best practices for optimal performance.
 
 ## Prerequisites
 
@@ -9,7 +11,8 @@ This guide provides comprehensive instructions for running Gemini CLI on Raspber
 - **Raspberry Pi 4 or newer** (recommended)
   - Minimum: 4GB RAM
   - Recommended: 8GB RAM for better performance
-- **Storage**: Minimum 16GB SD card or SSD (SSD strongly recommended for better performance)
+- **Storage**: Minimum 16GB SD card or SSD (SSD strongly recommended for better
+  performance)
 - **Cooling**: Active cooling (fan) recommended to prevent thermal throttling
 - **Network**: Ethernet connection recommended for stability
 
@@ -115,7 +118,8 @@ npx @google/gemini-cli
 
 ## Resource Monitoring
 
-Raspberry Pi devices can experience thermal throttling and performance issues under heavy load. Use the included monitoring script to track system resources.
+Raspberry Pi devices can experience thermal throttling and performance issues
+under heavy load. Use the included monitoring script to track system resources.
 
 ### System Monitoring Script
 
@@ -206,7 +210,7 @@ while true; do
     echo "=== System Resource Monitor ==="
     echo "Time: $(date '+%Y-%m-%d %H:%M:%S')"
     echo ""
-    
+
     # CPU Temperature
     cpu_temp=$(get_cpu_temp)
     if [ "$cpu_temp" != "N/A" ]; then
@@ -220,24 +224,24 @@ while true; do
     else
         echo "CPU Temp: N/A"
     fi
-    
+
     # GPU Temperature
     gpu_temp=$(get_gpu_temp)
     echo "GPU Temp: ${gpu_temp}°C"
-    
+
     # Throttling status
     echo -n "Throttling: "
     check_throttling
-    
+
     # System resources
     echo ""
     echo "CPU Usage: $(get_cpu_usage)"
     echo "Memory Usage: $(get_memory_usage)"
     echo "Disk Usage: $(get_disk_usage)"
-    
+
     echo ""
     echo "Press Ctrl+C to exit"
-    
+
     sleep 2
 done
 ```
@@ -262,7 +266,7 @@ CHECK_INTERVAL=10
 while true; do
     cpu_temp=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null)
     cpu_temp=$((cpu_temp / 1000))
-    
+
     if [ $cpu_temp -gt $TEMP_THRESHOLD ]; then
         echo "Warning: CPU temperature ${cpu_temp}°C exceeds threshold ${TEMP_THRESHOLD}°C"
         # Optionally pause or throttle processes here
@@ -270,7 +274,7 @@ while true; do
         sleep 30
         # pkill -CONT -f gemini  # Resume Gemini CLI
     fi
-    
+
     sleep $CHECK_INTERVAL
 done
 ```
@@ -423,6 +427,7 @@ gemini --sandbox
 **Symptoms**: Slow performance, system freezing
 
 **Solutions**:
+
 1. Add active cooling (fan)
 2. Reduce ambient temperature
 3. Apply heatsinks to CPU/RAM
@@ -437,6 +442,7 @@ gemini --sandbox
 **Symptoms**: Process killed, Node.js heap errors
 
 **Solutions**:
+
 1. Increase swap space
 2. Use lighter model (gemini-2.5-flash)
 3. Reduce context size
@@ -451,6 +457,7 @@ gemini --sandbox
 **Symptoms**: Slow API responses, timeouts
 
 **Solutions**:
+
 1. Use Ethernet instead of Wi-Fi
 2. Check network with `ping google.com`
 3. Optimize DNS settings:
@@ -465,6 +472,7 @@ gemini --sandbox
 **Symptoms**: Slow file operations, high I/O wait
 
 **Solutions**:
+
 1. Use SSD via USB 3.0 instead of SD card
 2. Use high-quality, high-speed SD card (UHS-3 or better)
 3. Reduce logging:
@@ -504,7 +512,8 @@ Now you can access your Pi securely from anywhere using the Tailscale IP.
 
 ### Port Forwarding (if needed)
 
-If you need to expose Gemini CLI over the internet (not recommended without proper security):
+If you need to expose Gemini CLI over the internet (not recommended without
+proper security):
 
 ```bash
 # Configure firewall
@@ -548,9 +557,11 @@ echo "Backup completed: $BACKUP_DIR/gemini-config-$TIMESTAMP.tar.gz"
 ## Community Examples
 
 Share your Raspberry Pi + Gemini CLI setup:
+
 - [GitHub Discussions](https://github.com/google-gemini/gemini-cli/discussions)
 - [Issue Tracker](https://github.com/google-gemini/gemini-cli/issues)
 
 ---
 
-**Note**: Performance on Raspberry Pi will be lower than on desktop systems. Adjust expectations and optimize settings accordingly.
+**Note**: Performance on Raspberry Pi will be lower than on desktop systems.
+Adjust expectations and optimize settings accordingly.
