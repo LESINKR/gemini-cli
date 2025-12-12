@@ -1,0 +1,104 @@
+# Copyright 2025 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+
+# Gemini CLI Systemd Service Configuration
+#
+# This is an example systemd service file for running Gemini CLI as a system service
+# on Raspberry Pi or other Linux systems.
+#
+# Installation:
+#   1. Edit this file to configure your environment variables and paths
+#   2. Copy to systemd directory: sudo cp gemini-cli.service /etc/systemd/system/
+#   3. Reload systemd: sudo systemctl daemon-reload
+#   4. Enable service: sudo systemctl enable gemini-cli
+#   5. Start service: sudo systemctl start gemini-cli
+#   6. Check status: sudo systemctl status gemini-cli
+#   7. View logs: sudo journalctl -u gemini-cli -f
+
+[Unit]
+Description=Gemini CLI Service
+Documentation=https://github.com/google-gemini/gemini-cli
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# User and group to run the service as (change to your user)
+User=pi
+Group=pi
+
+# Working directory (change to your preferred directory)
+WorkingDirectory=/home/pi
+
+# Environment variables
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="NODE_ENV=production"
+
+# Gemini CLI Configuration
+# IMPORTANT: Replace with your actual API key or use OAuth
+Environment="GEMINI_API_KEY=your_api_key_here"
+
+# Or use OAuth (recommended for personal use)
+# Environment="GOOGLE_CLOUD_PROJECT=your_project_id"
+
+# Sandbox configuration (disable on Raspberry Pi for better performance)
+Environment="GEMINI_SANDBOX=false"
+
+# Model selection (use Flash for better performance on Pi)
+# Environment="GEMINI_MODEL=gemini-2.5-flash"
+
+# Memory limit for Node.js (adjust based on your Pi's RAM)
+Environment="NODE_OPTIONS=--max-old-space-size=2048"
+
+# Logging configuration
+Environment="GEMINI_LOG_LEVEL=info"
+
+# Command to execute
+# Note: Adjust the command based on your use case
+# For interactive mode (headless):
+ExecStart=/usr/local/bin/gemini --headless
+
+# For non-interactive with specific prompt:
+# ExecStart=/usr/local/bin/gemini -p "Your default prompt here" --output-format json
+
+# Restart policy
+Restart=on-failure
+RestartSec=10s
+
+# Timeout for start/stop operations
+TimeoutStartSec=60
+TimeoutStopSec=30
+
+# Resource limits (important for Raspberry Pi)
+# Limit memory usage to 2GB
+MemoryLimit=2G
+
+# Limit CPU usage to 75% (prevents thermal issues)
+CPUQuota=75%
+
+# Set nice level (lower priority)
+Nice=5
+
+# I/O scheduling
+IOSchedulingClass=best-effort
+IOSchedulingPriority=4
+
+# Security hardening
+# Prevent the service from gaining new privileges
+NoNewPrivileges=true
+
+# Use a private /tmp directory
+PrivateTmp=true
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=gemini-cli
+
+# Kill mode
+KillMode=mixed
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target

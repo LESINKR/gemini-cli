@@ -51,6 +51,10 @@ brew install gemini-cli
 - Node.js version 20 or higher
 - macOS, Linux, or Windows
 
+**Running on Raspberry Pi or ARM devices?** See the
+[Raspberry Pi Deployment Guide](./docs/get-started/raspberry-pi.md) for
+optimized setup instructions, temperature monitoring, and performance tips
+
 ## Release Cadence and Tags
 
 See [Releases](./docs/releases.md) for more details.
@@ -257,6 +261,8 @@ gemini
   auth configuration.
 - [**Configuration Guide**](./docs/get-started/configuration.md) - Settings and
   customization.
+- [**Raspberry Pi Deployment**](./docs/get-started/raspberry-pi.md) - Run Gemini
+  CLI on Raspberry Pi with resource monitoring and optimization.
 - [**Keyboard Shortcuts**](./docs/cli/keyboard-shortcuts.md) - Productivity
   tips.
 
